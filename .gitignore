@@ -1,0 +1,17 @@
+node_modules/
+.node_modules.lock
+.vercel/
+dist/
+shell/dist/
+release/
+android/
+ios/
+screenshots/
+artifacts/
+attachments/
+*.log
+.env
+.env.*
+.DS_Store
+.grok/*
+!.grok/app-env.json

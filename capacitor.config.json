@@ -1,0 +1,9 @@
+{
+  "appId": "com.f0rgis.lacquer",
+  "appName": "Lacquer",
+  "webDir": "shell/dist",
+  "backgroundColor": "#140e0a",
+  "android": {
+    "allowMixedContent": false
+  }
+}
