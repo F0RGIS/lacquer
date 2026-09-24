@@ -13,15 +13,15 @@ export const DEFAULT_COAT = "blue";
 
 export const COATS: Coat[] = [
   { id: "blue", name: "Still Blue", motion: "still", hue: 227, price: 0, detail: "The house lacquer" },
-  { id: "blue-pulse", name: "Pulse Blue", motion: "pulse", hue: 227, price: 12, detail: "Blue that throbs" },
-  { id: "blue-fade", name: "Fade Blue", motion: "fade", hue: 227, price: 18, detail: "Shifts through blues" },
-  { id: "red", name: "Still Red", motion: "still", hue: 4, price: 6, detail: "One solid red coat" },
-  { id: "red-pulse", name: "Pulse Red", motion: "pulse", hue: 4, price: 12, detail: "Red that throbs" },
-  { id: "red-fade", name: "Fade Red", motion: "fade", hue: 4, price: 18, detail: "Shifts through reds" },
-  { id: "green", name: "Still Green", motion: "still", hue: 142, price: 6, detail: "One solid green coat" },
-  { id: "green-pulse", name: "Pulse Green", motion: "pulse", hue: 142, price: 12, detail: "Green that throbs" },
-  { id: "green-fade", name: "Fade Green", motion: "fade", hue: 142, price: 18, detail: "Shifts through greens" },
-  { id: "rainbow", name: "Rainbow", motion: "rainbow", hue: 0, price: 30, detail: "Fades across the spectrum" },
+  { id: "blue-pulse", name: "Pulse Blue", motion: "pulse", hue: 227, price: 180, detail: "Blue that throbs" },
+  { id: "blue-fade", name: "Fade Blue", motion: "fade", hue: 227, price: 270, detail: "Shifts through blues" },
+  { id: "red", name: "Still Red", motion: "still", hue: 4, price: 90, detail: "One solid red coat" },
+  { id: "red-pulse", name: "Pulse Red", motion: "pulse", hue: 4, price: 180, detail: "Red that throbs" },
+  { id: "red-fade", name: "Fade Red", motion: "fade", hue: 4, price: 270, detail: "Shifts through reds" },
+  { id: "green", name: "Still Green", motion: "still", hue: 142, price: 90, detail: "One solid green coat" },
+  { id: "green-pulse", name: "Pulse Green", motion: "pulse", hue: 142, price: 180, detail: "Green that throbs" },
+  { id: "green-fade", name: "Fade Green", motion: "fade", hue: 142, price: 270, detail: "Shifts through greens" },
+  { id: "rainbow", name: "Rainbow", motion: "rainbow", hue: 0, price: 450, detail: "Fades across the spectrum" },
 ];
 
 const reducedMotion =

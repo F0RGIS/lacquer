@@ -33,6 +33,7 @@ export type Hud = {
   phase: Phase;
   canUndo: boolean;
   assisted: boolean;
+  retried: boolean;
   demo: boolean;
   material: string;
   endless: boolean;
@@ -179,6 +180,7 @@ export class Session {
   moves = 0;
   phase: Phase = "idle";
   assisted = false;
+  retried = false;
   demo = false;
   history: Snap[] = [];
   queue: Dir | null = null;
@@ -236,6 +238,7 @@ export class Session {
       phase: this.phase,
       canUndo: this.history.length > 0 && this.phase !== "rolling",
       assisted: this.assisted,
+      retried: this.retried,
       demo: this.demo,
       material: this.material.name,
       endless: this.endless,
@@ -244,7 +247,7 @@ export class Session {
 
   publish(): void {
     const hud = this.hud();
-    const key = `${hud.levelIndex}|${hud.moves}|${hud.coated}|${hud.phase}|${hud.canUndo}|${hud.assisted}|${hud.demo}|${hud.total}`;
+    const key = `${hud.levelIndex}|${hud.moves}|${hud.coated}|${hud.phase}|${hud.canUndo}|${hud.assisted}|${hud.retried}|${hud.demo}|${hud.total}`;
     if (key === this.lastHud) return;
     this.lastHud = key;
     this.onHud(hud);
@@ -278,6 +281,7 @@ export class Session {
     this.moves = 0;
     this.phase = "idle";
     this.assisted = false;
+    this.retried = false;
     this.history = [];
     this.queue = null;
     this.roll = null;
@@ -323,8 +327,13 @@ export class Session {
   }
 
   reset(): void {
-    this.apply(this.level, this.levelIndex, this.demo);
-    if (!this.demo) sfx.ui();
+    const demo = this.demo;
+    this.apply(this.level, this.levelIndex, demo);
+    if (!demo) {
+      this.retried = true;
+      sfx.ui();
+      this.publish();
+    }
   }
 
   nudge(): Dir | null {

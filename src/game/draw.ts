@@ -222,7 +222,17 @@ export function drawBoard(ctx: CanvasRenderingContext2D, state: DrawState, size:
     ctx.fill();
     ctx.restore();
   } else {
-    drawToken(ctx, state.pieceId, cell, state.stride, state.ballRot < 0 ? -1 : 1, bx, by, rgbCss(coat));
+    drawToken(
+      ctx,
+      state.pieceId,
+      cell,
+      state.stride,
+      state.ballRot < 0 ? -1 : 1,
+      bx,
+      by,
+      rgbCss(coat),
+      Math.abs(state.ballRot),
+    );
   }
 
   if (state.hint && state.hintLife > 0) {

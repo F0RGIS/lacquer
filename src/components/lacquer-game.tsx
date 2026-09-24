@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import {
   ArrowDown,
   ArrowLeft,
@@ -45,10 +45,10 @@ declare global {
 }
 
 const DIRS: { dir: Dir; label: string; icon: typeof ArrowUp }[] = [
-  { dir: "L", label: "Move left", icon: ArrowLeft },
-  { dir: "U", label: "Move up", icon: ArrowUp },
-  { dir: "D", label: "Move down", icon: ArrowDown },
-  { dir: "R", label: "Move right", icon: ArrowRight },
+  { dir: "L", label: "Slide left until a wall", icon: ArrowLeft },
+  { dir: "U", label: "Slide up until a wall", icon: ArrowUp },
+  { dir: "D", label: "Slide down until a wall", icon: ArrowDown },
+  { dir: "R", label: "Slide right until a wall", icon: ArrowRight },
 ];
 
 function keyDir(code: string): Dir | null {
@@ -169,14 +169,15 @@ export function LacquerGame() {
         const id = sim.level.id;
         const prev = bestRef.current[id];
         const prevStars = prev?.stars ?? 0;
-        const gain = Math.max(0, stars - prevStars);
+        const forfeited = sim.assisted || sim.retried;
+        const gain = forfeited ? 0 : Math.max(0, stars - prevStars);
         if (gain > 0) {
           gemsRef.current += gain;
           setGems(gemsRef.current);
         }
         setGemGain(gain);
         let nextBest = bestRef.current;
-        if (!prev || stars > prev.stars || (stars === prev.stars && sim.moves < prev.moves)) {
+        if (!forfeited && (!prev || stars > prev.stars || (stars === prev.stars && sim.moves < prev.moves))) {
           nextBest = { ...bestRef.current, [id]: { moves: sim.moves, stars } };
           bestRef.current = nextBest;
           setBest(nextBest);
@@ -497,24 +498,29 @@ export function LacquerGame() {
       <footer className="safe-pad shrink-0 px-4 pt-3">
         {mode === "title" ? (
           <div className="mx-auto flex w-full max-w-md flex-col gap-2">
+            <Hint hint="Start a new random maze">
             <button
               type="button"
-              className="press h-12 rounded-full bg-cream text-base font-semibold text-ink"
+              className="press h-12 w-full rounded-full bg-cream text-base font-semibold text-ink"
               onClick={() => beginNext()}
             >
               Play
             </button>
+            </Hint>
             <div className="grid grid-cols-2 gap-2">
+              <Hint hint="Play the classic Impossible board" place="start">
               <button
                 type="button"
-                className="press h-11 rounded-full bg-surface text-sm font-medium text-fg"
+                className="press h-11 w-full rounded-full bg-surface text-sm font-medium text-fg"
                 onClick={() => begin(LEVELS.length - 1)}
               >
                 Try Impossible
               </button>
+              </Hint>
+              <Hint hint="Browse the eight classic boards" place="end">
               <button
                 type="button"
-                className="press h-11 rounded-full bg-surface text-sm font-medium text-fg"
+                className="press h-11 w-full rounded-full bg-surface text-sm font-medium text-fg"
                 onClick={() => {
                   unlockAudio();
                   setStoreOpen(false);
@@ -523,6 +529,7 @@ export function LacquerGame() {
               >
                 All boards
               </button>
+              </Hint>
             </div>
           </div>
         ) : (
@@ -543,64 +550,77 @@ export function LacquerGame() {
               </div>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {DIRS.map(({ dir, label, icon: Icon }) => (
-                <button
+              {DIRS.map(({ dir, label, icon: Icon }, index) => (
+                <Hint
                   key={dir}
-                  type="button"
-                  aria-label={label}
-                  className="press inline-flex h-11 items-center justify-center rounded-xl bg-surface text-fg"
-                  onClick={() => {
-                    unlockAudio();
-                    simRef.current?.swipe(dir);
-                  }}
+                  hint={label}
+                  place={index === 0 ? "start" : index === DIRS.length - 1 ? "end" : "center"}
                 >
-                  <Icon className="size-5" />
-                </button>
+                  <button
+                    type="button"
+                    aria-label={label}
+                    className="press inline-flex h-11 w-full items-center justify-center rounded-xl bg-surface text-fg"
+                    onClick={() => {
+                      unlockAudio();
+                      simRef.current?.swipe(dir);
+                    }}
+                  >
+                    <Icon className="size-5" />
+                  </button>
+                </Hint>
               ))}
             </div>
             <div className="grid grid-cols-4 gap-2">
-              <button
-                type="button"
-                aria-label="Undo"
-                className="press inline-flex h-14 flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg disabled:opacity-40"
-                onClick={() => simRef.current?.undo()}
-                disabled={!hud?.canUndo}
-              >
-                <Undo2 className="size-4" />
-                Undo
-              </button>
-              <button
-                type="button"
-                aria-label="Reset board"
-                className="press inline-flex h-14 flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg"
-                onClick={() => simRef.current?.reset()}
-              >
-                <RotateCcw className="size-4" />
-                Reset
-              </button>
-              <button
-                type="button"
-                aria-label="All boards"
-                className="press inline-flex h-14 flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg"
-                onClick={() => {
-                  unlockAudio();
-                  setStoreOpen(false);
-                  setBoardsOpen(true);
-                }}
-              >
-                <LayoutGrid className="size-4" />
-                Boards
-              </button>
-              <button
-                type="button"
-                aria-label="Nudge, shows a roll and caps stars at two"
-                className="press inline-flex h-14 flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg disabled:opacity-40"
-                onClick={() => simRef.current?.nudge()}
-                disabled={hud?.phase === "rolling" || hud?.phase === "won"}
-              >
-                <Lightbulb className="size-4" />
-                Nudge
-              </button>
+              <Hint hint="Take back the last move" place="start">
+                <button
+                  type="button"
+                  aria-label="Undo"
+                  className="press inline-flex h-14 w-full flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg disabled:opacity-40"
+                  onClick={() => simRef.current?.undo()}
+                  disabled={!hud?.canUndo}
+                >
+                  <Undo2 className="size-4" />
+                  Undo
+                </button>
+              </Hint>
+              <Hint hint="Start over. This level pays no gems">
+                <button
+                  type="button"
+                  aria-label="Reset board. This level pays no gems"
+                  className="press inline-flex h-14 w-full flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg"
+                  onClick={() => simRef.current?.reset()}
+                >
+                  <RotateCcw className="size-4" />
+                  Reset
+                </button>
+              </Hint>
+              <Hint hint="Open the classic boards">
+                <button
+                  type="button"
+                  aria-label="All boards"
+                  className="press inline-flex h-14 w-full flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg"
+                  onClick={() => {
+                    unlockAudio();
+                    setStoreOpen(false);
+                    setBoardsOpen(true);
+                  }}
+                >
+                  <LayoutGrid className="size-4" />
+                  Boards
+                </button>
+              </Hint>
+              <Hint hint="Show the next move. Pays no gems" place="end">
+                <button
+                  type="button"
+                  aria-label="Nudge, shows the next move and awards no gems"
+                  className="press inline-flex h-14 w-full flex-col items-center justify-center gap-0.5 rounded-xl bg-surface text-xs text-fg disabled:opacity-40"
+                  onClick={() => simRef.current?.nudge()}
+                  disabled={hud?.phase === "rolling" || hud?.phase === "won"}
+                >
+                  <Lightbulb className="size-4" />
+                  Nudge
+                </button>
+              </Hint>
             </div>
           </div>
         )}
@@ -619,7 +639,7 @@ export function LacquerGame() {
             <p className="mt-1 text-sm text-ink/70">
               {hud?.name} · {hud?.moves} {hud?.moves === 1 ? "roll" : "rolls"}
               {hud && hud.moves <= hud.par ? " · on par" : ""}
-              {hud?.assisted ? " · guided, two stars at best" : ""}
+              {hud?.assisted ? " · nudge used, no gems" : hud?.retried ? " · retry used, no gems" : ""}
             </p>
             <div className="mt-3 flex gap-1">
               {[1, 2, 3].map((n) => (
@@ -629,7 +649,11 @@ export function LacquerGame() {
                 />
               ))}
             </div>
-            {gemGain > 0 ? (
+            {hud?.assisted ? (
+              <p className="mt-3 text-sm font-medium">No gems. Nudge was used.</p>
+            ) : hud?.retried ? (
+              <p className="mt-3 text-sm font-medium">No gems. Retry was used.</p>
+            ) : gemGain > 0 ? (
               <p className="mt-3 text-sm font-medium">
                 +{gemGain} {gemGain === 1 ? "gem" : "gems"}
               </p>
@@ -640,7 +664,7 @@ export function LacquerGame() {
                 className="press h-11 rounded-full bg-ink/10 text-sm font-medium"
                 onClick={() => simRef.current?.reset()}
               >
-                Replay
+                Retry
               </button>
               <button
                 type="button"
@@ -846,6 +870,29 @@ export function LacquerGame() {
         </div>
       ) : null}
     </main>
+  );
+}
+
+function Hint({
+  hint,
+  place = "center",
+  children,
+}: {
+  hint: string;
+  place?: "center" | "start" | "end";
+  children: ReactNode;
+}) {
+  const align = place === "start" ? "left-0" : place === "end" ? "right-0" : "left-1/2 -translate-x-1/2";
+  return (
+    <span className="group relative block">
+      {children}
+      <span
+        role="tooltip"
+        className={`pointer-events-none absolute bottom-full z-30 mb-2 hidden w-max max-w-44 rounded-lg bg-cream px-2.5 py-1 text-center text-xs leading-snug font-medium text-ink shadow-lg group-hover:block group-focus-within:block ${align}`}
+      >
+        {hint}
+      </span>
+    </span>
   );
 }
 

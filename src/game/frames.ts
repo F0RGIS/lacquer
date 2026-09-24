@@ -22,7 +22,7 @@ export const FRAMES: Frame[] = [
   {
     id: "linen",
     name: "Linen",
-    price: 6,
+    price: 90,
     detail: "Slubby natural weave",
     swatch: "#e4d3b4",
     background:
@@ -31,7 +31,7 @@ export const FRAMES: Frame[] = [
   {
     id: "silk",
     name: "Silk",
-    price: 20,
+    price: 300,
     detail: "Smooth sheen",
     swatch: "#f0d7c4",
     background: "linear-gradient(115deg, #f8e6d4 0%, #e7b89a 42%, #fff6ee 58%, #e8c2a8 100%)",
@@ -39,7 +39,7 @@ export const FRAMES: Frame[] = [
   {
     id: "wool",
     name: "Wool",
-    price: 12,
+    price: 180,
     detail: "Heathered knit",
     swatch: "#b7a898",
     background:
@@ -48,7 +48,7 @@ export const FRAMES: Frame[] = [
   {
     id: "polyester",
     name: "Polyester",
-    price: 4,
+    price: 60,
     detail: "Even synthetic plain",
     swatch: "#d5d8de",
     background: "repeating-linear-gradient(0deg, #e4e7ee 0 2px, #c8ced8 2px 3px)",
@@ -56,7 +56,7 @@ export const FRAMES: Frame[] = [
   {
     id: "nylon",
     name: "Nylon",
-    price: 4,
+    price: 60,
     detail: "Tight slick weave",
     swatch: "#c9d0d6",
     background: "linear-gradient(180deg, #eef3f6, #b7c2cc)",
@@ -64,7 +64,7 @@ export const FRAMES: Frame[] = [
   {
     id: "spandex",
     name: "Spandex",
-    price: 8,
+    price: 120,
     detail: "Stretch knit",
     swatch: "#2c3444",
     background:
@@ -73,7 +73,7 @@ export const FRAMES: Frame[] = [
   {
     id: "rayon",
     name: "Rayon / Viscose",
-    price: 7,
+    price: 105,
     detail: "Soft viscose drape",
     swatch: "#d7c6b4",
     background: "linear-gradient(160deg, #f0e2d2, #cbb59d 55%, #e6d5c4)",
@@ -81,7 +81,7 @@ export const FRAMES: Frame[] = [
   {
     id: "modal",
     name: "Modal",
-    price: 8,
+    price: 120,
     detail: "Fine matte knit",
     swatch: "#c9bfc2",
     background: "repeating-linear-gradient(0deg, #ddd4d6 0 2px, #c9bfc2 2px 4px)",
@@ -89,7 +89,7 @@ export const FRAMES: Frame[] = [
   {
     id: "denim",
     name: "Denim",
-    price: 10,
+    price: 150,
     detail: "Twill cotton",
     swatch: "#3d5f86",
     background:
@@ -98,7 +98,7 @@ export const FRAMES: Frame[] = [
   {
     id: "jersey",
     name: "Jersey",
-    price: 5,
+    price: 75,
     detail: "Loop-knit tee cloth",
     swatch: "#efe8df",
     background:
@@ -107,7 +107,7 @@ export const FRAMES: Frame[] = [
   {
     id: "velvet",
     name: "Velvet",
-    price: 16,
+    price: 240,
     detail: "Piled sheen",
     swatch: "#6b2438",
     background: "linear-gradient(180deg, #8a3048 0%, #4a1524 55%, #7a2840 100%)",
